@@ -6,6 +6,8 @@ library(VIM)
 library(ggplot2)
 library(statip)
 library(e1071)
+library(ISLR)
+library(tree)
 
 # Ucitavanje podataka (izvornih) u data frame
 atrain<-read.csv("data/attrition_train.csv", header=TRUE)
@@ -72,3 +74,37 @@ rpart.prec
 plot(rpart.attrition)
 text(rpart.attrition,cex=.6, pos=1, offset=0.7)
 rpart.attrition
+
+
+# Drvo odlucivanja 2: koristimo paket tree
+attrition.tree<-tree(Attrition~., data=atrain)
+tree.pred<-predict(attrition.tree, atest, type ="class") 
+
+# Konfuzijska matrica na 2 nacina: prvi koristeci confusionMatrix
+# drugi koristeci lab 
+
+confusionMatrix(rpart.attrition, atest$Attrition)
+
+tree.conf<-table(atest$Attrition,tree.pred) 
+
+#Tacnost (TP+TN/all):
+tree.acc<-(tree.conf[1,1]+tree.conf[2,2])/(sum(tree.conf))
+#Stepen greske (FP+FN/all):
+tree.err<-(tree.conf[1,2]+tree.conf[2,1])/(sum(tree.conf))
+#Osjetljivost=Recall (sensitivity) - TPR (TP/Positive):
+tree.sens<-tree.conf[2,2]/(tree.conf[2,1]+tree.conf[2,2])
+#Specificnost (specificity) - TNR (TN/Negative):
+tree.spec<-tree.conf[1,1]/(tree.conf[1,1]+tree.conf[1,2])
+#Preciznost (TP/TP+FP):
+tree.prec<-tree.conf[2,2]/(tree.conf[2,2]+tree.conf[1,2])
+
+tree.conf
+tree.acc
+tree.err
+tree.sens
+tree.spec
+tree.prec
+ 
+plot(attrition.tree)
+text(attrition.tree,cex=.6, pos=1, offset=0.7)
+attrition.tree
