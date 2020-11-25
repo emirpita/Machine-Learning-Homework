@@ -1,10 +1,11 @@
 library(ggplot2)
 library(statip)
+library(Hmisc)
 
 getwd()
 setwd("E:/MU/Zadaca1/")
 
-atrain<-read.csv("data/attrition_train.csv", header=TRUE)
+atrain<-read.csv("Data/attrition_train.csv", header=TRUE)
 
 #tip atrain -> lista
 typeof(atrain)
@@ -124,10 +125,25 @@ apply(atrain[,c('X', 'DailyRate', 'DistanceFromHome', 'EmployeeCount', 'Employee
 #https://dzchilds.github.io/eda-for-bio/exploring-relationships-between-two-variables.html
 
 
-#Pearson’s correlation coefficient takes a value of 0 if two variables are uncorrelated, and a value of +1 or -1 if they are perfectly related. 
-#‘Perfectly related’ means we can predict the exact value of one variable given knowledge of the other. A positive value indicates that high values 
+#Pearson?s correlation coefficient takes a value of 0 if two variables are uncorrelated, and a value of +1 or -1 if they are perfectly related. 
+#?Perfectly related? means we can predict the exact value of one variable given knowledge of the other. A positive value indicates that high values 
 #in one variable is associated with high values of the second. A negative value indicates that high values of one variable is associated with low 
 #values of the second
+
+#Attrition
+cor<-rcorr(as.matrix(atrain[,c("X", "Attrition", "BusinessTravel","DailyRate","Department","DistanceFromHome",        
+                               "Education","EducationField","EmployeeCount","EmployeeNumber","EnvironmentSatisfaction","Gender",                  
+                               "HourlyRate","JobInvolvement","JobLevel","JobRole","JobSatisfaction","MaritalStatus",          
+                               "MonthlyIncome","MonthlyRate","NumCompaniesWorked","Over18","OverTime","PercentSalaryHike",      
+                               "PerformanceRating","RelationshipSatisfaction","StandardHours" ,          
+                               "StockOptionLevel","TotalWorkingYears","TrainingTimesLastYear",   
+                               "WorkLifeBalance","YearsAtCompany","YearsInCurrentRole",      
+                               "YearsSinceLastPromotion","YearsWithCurrManager","BirthDate" )]))
+cor$r
+cor$P
+
+cor(atrain$Attrition, atrain$BirthDate)
+
 
 #DailyRate
 cor(atrain$DailyRate, atrain$DistanceFromHome)

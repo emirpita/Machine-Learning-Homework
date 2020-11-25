@@ -85,17 +85,24 @@ prop.table(table(atrain$YearsWithCurrManager))
 prop.table(table(atrain$BirthDate))#onako
 
 #transformisat cemo varijable koje imaju veliku distribuciju
-#to su varijable: X, DailyRate, EmployeeNumber, HourlyRate, MonthlyIncome, MonthlyRate, BirthDate
-#za sve ove varijable kreirat cemo nove varijable koje ce sadrzavati njihove transformacije
-#mozemo sve varijable transformisati funkcijom main_max za pocetak
-#ako zelimo izmijeniti ove varijable u pocetnom setu, a ne praviti nove dodatne varijable onda mozemo 
-#koristiti funkcju lapply kao u lv3
+#to su varijable:  DailyRate, EmployeeNumber, HourlyRate, MonthlyIncome, MonthlyRate
 
-atrain$X1<-min_max(atrain$X)
-atrain$DailyRate1<-min_max(atrain$DailyRate)
-atrain$EmployeeNumber1<-min_max(atrain$EmployeeNumber)
-atrain$HourlyRate1<-min_max(atrain$HourlyRate)
-atrain$MonthlyIncome1<-min_max(atrain$MonthlyIncome)
-atrain$MonthlyRate1<-min_max(atrain$MonthlyRate)
-atrain$BirthDate1<-min_max(atrain$BirthDate)
+#nakon analize utvrdjeno je da najbolji rezultat dobijamo skaliranjem sa funkcijom z_score
+atrain[,c(4,10,20)]<-lapply(atrain[,c(4,10,20)],z_score)
+summary(atrain)
+atrain<-read.csv("Data/attrition_train.csv", header=TRUE)
+
+#provjera smaknutosti varijabli
+skewness(atrain$HourlyRate, na.rm = TRUE)
+skewness(atrain$MonthlyIncome, na.rm = TRUE)
+skewness(atrain$NumCompaniesWorked, na.rm = TRUE)
+skewness(atrain$TotalWorkingYears, na.rm = TRUE)
+skewness(atrain$YearsAtCompany, na.rm = TRUE)
+skewness(atrain$YearsSinceLastPromotion, na.rm = TRUE)
+
+hist(atrain$PercentSalaryHike)
+
+#primjena log funkcije na varijable koje su smaknute
+atrain$HourlyRate<-log(atrain$HourlyRate)
+atrain$MonthlyIncome<-log(atrain$MonthlyIncome)
 
