@@ -118,6 +118,7 @@ consolidate.stockoptionlevel <- function(solevel) {
     return(solevel)
   }
 }
+#normalizacija trening seta
 atrain$Education <- as.factor(sapply(as.character(atrain$Education), consolidate.education, USE.NAMES=FALSE))
 atrain$EnvironmentSatisfaction <- as.factor(sapply(as.character(atrain$EnvironmentSatisfaction), consolidate.enviromentSatisfaction, USE.NAMES=FALSE))
 atrain$JobInvolvement <- as.factor(sapply(as.character(atrain$JobInvolvement), consolidate.jobInvolvment, USE.NAMES=FALSE))
@@ -127,3 +128,16 @@ atrain$RelationshipSatisfaction <- as.factor(sapply(as.character(atrain$Relation
 atrain$WorkLifeBalance <- as.factor(sapply(as.character(atrain$WorkLifeBalance), consolidate.workLifeBalance, USE.NAMES=FALSE))
 atrain$JobLevel <- as.factor(sapply(as.character(atrain$JobLevel), consolidate.jobLevel, USE.NAMES=FALSE))
 atrain$StockOptionLevel <- as.factor(sapply(as.character(atrain$StockOptionLevel), consolidate.stockoptionlevel, USE.NAMES=FALSE))
+
+
+#normalizacija testnog seta
+atest$Education <- as.factor(sapply(as.character(atest$Education), consolidate.education, USE.NAMES=FALSE))
+atest$EnvironmentSatisfaction <- as.factor(sapply(as.character(atest$EnvironmentSatisfaction), consolidate.enviromentSatisfaction, USE.NAMES=FALSE))
+atest$JobInvolvement <- as.factor(sapply(as.character(atest$JobInvolvement), consolidate.jobInvolvment, USE.NAMES=FALSE))
+atest$JobSatisfaction <- as.factor(sapply(as.character(atest$JobSatisfaction), consolidate.jobSatisfaction, USE.NAMES=FALSE))
+atest$PerformanceRating <- as.factor(sapply(as.character(atest$PerformanceRating), consolidate.performanceRating, USE.NAMES=FALSE))
+atest$RelationshipSatisfaction <- as.factor(sapply(as.character(atest$RelationshipSatisfaction), consolidate.relationshipSatisfaction, USE.NAMES=FALSE))
+atest$WorkLifeBalance <- as.factor(sapply(as.character(atest$WorkLifeBalance), consolidate.workLifeBalance, USE.NAMES=FALSE))
+atest$JobLevel <- as.factor(sapply(as.character(atest$JobLevel), consolidate.jobLevel, USE.NAMES=FALSE))
+atest$StockOptionLevel <- as.factor(sapply(as.character(atest$StockOptionLevel), consolidate.stockoptionlevel, USE.NAMES=FALSE))
+
