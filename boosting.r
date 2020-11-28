@@ -33,7 +33,7 @@ aggr(atrain)
 md.pattern(atest)
 aggr(atest) # Iz ovog je ocito da atest nema nedostajucih vrijednosti, sto je olaksanje
 
-#Boosting prva iteracija
+#Boosting prva iteracija#
 atrain$Attrition<-ifelse(atrain$Attrition=="Yes",1,0)
 atest$Attrition<-ifelse(atest$Attrition=="Yes",1,0)
 atrain$Attrition <- as.character(atrain$Attrition)
