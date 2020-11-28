@@ -69,7 +69,6 @@ attrition.tree
 
 
 # Iteracija 2
-
 # rpart drvo
 rpart.attrition <- rpart(Attrition~., data=atrain)
 rpart.pred <- predict(rpart.attrition, atest, type="class")
