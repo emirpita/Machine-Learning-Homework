@@ -61,3 +61,4 @@ atrain[is.na(atrain$Over18),'Over18']<-getmode(atrain[!is.na(atrain$Over18),'Ove
 atrain[is.na(atrain$PercentSalaryHike),'PercentSalaryHike']<-getmode(atrain[!is.na(atrain$PercentSalaryHike),'PercentSalaryHike'])
 atrain[is.na(atrain$StandardHours),'StandardHours']<-getmode(atrain[!is.na(atrain$StandardHours),'StandardHours'])
 atrain[is.na(atrain$TrainingTimesLastYear),'TrainingTimesLastYear']<-getmode(atrain[!is.na(atrain$TrainingTimesLastYear),'TrainingTimesLastYear'])
+
