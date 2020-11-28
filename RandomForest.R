@@ -11,8 +11,8 @@ library(ROSE)
 getwd()
 setwd("E:/MU/Zadaca1/")
 
-atrain<-read.csv("data/attrition_train.csv", header=TRUE)
-atrain<-read.csv("data/attrition_train.csv", header=TRUE)
+atrain<-read.csv("Data/attrition_train.csv", header=TRUE)
+atrain<-read.csv("Data/attrition_train.csv", header=TRUE)
 
 #potrebno popuniti nedostajuce vrijednosti
 

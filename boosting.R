@@ -40,9 +40,10 @@ aggr(atest) # Iz ovog je ocito da atest nema nedostajucih vrijednosti, sto je ol
 #Boosting prva iteracija
 atrain$Attrition<-ifelse(atrain$Attrition=="Yes",1,0)
 atest$Attrition<-ifelse(atest$Attrition=="Yes",1,0)
-atrain$Attrition <- as.character(atrain$Attrition)
 
 atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)]<-lapply(atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)],as.factor)
+atrain$Attrition <- as.character(atrain$Attrition)
+
 boost.atrain<-gbm(Attrition~.-EmployeeCount-Over18-StandardHours, data=atrain, distribution="bernoulli", n.trees=10000, interaction.depth=8)
 boost.pred<-predict.gbm(boost.atrain, atest, type = "response", n.trees=10000)
 

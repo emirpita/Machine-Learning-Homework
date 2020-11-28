@@ -11,8 +11,8 @@ library(tree)
 library(ROSE)
 
 # Ucitavanje podataka (izvornih) u data frame
-atrain<-read.csv("data/attrition_train.csv", header=TRUE)
-atest<-read.csv("data/attrition_test.csv", header=TRUE)
+atrain<-read.csv("Data/attrition_train.csv", header=TRUE)
+atest<-read.csv("Data/attrition_test.csv", header=TRUE)
 
 # Postavljanje faktor varijabli
 atrain$Attrition <- as.factor(atrain$Attrition)
@@ -107,5 +107,5 @@ tree.over.pred<-predict(tree.over.fit, atest, type ="class")
 confusionMatrix(tree.over.pred, atest$Attrition)
 
 tree.under.fit<-tree(Attrition~., data=dec.data_over)
-tree.under.pred<-predict(tree.over.fit, atest, type ="class") 
+tree.under.pred<-predict(tree.under.fit, atest, type ="class") 
 confusionMatrix(tree.under.pred, atest$Attrition)
