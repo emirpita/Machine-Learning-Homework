@@ -37,18 +37,15 @@ aggr(atrain)
 md.pattern(atest)
 aggr(atest) # Iz ovog je ocito da atest nema nedostajucih vrijednosti, sto je olaksanje
 
-# Drvo odlucivanja 1: koristimo rpart, jer moze raditi u nekim slucajevima
-# i sa nedostajucim vrijednostima, sto je ustanovljeno pri analizi varijabli
 
 # Prva iteracija: istreniramo drvo sa postojecim podacima (izvornim):
 # Ocito je da se varijabla X treba izbaciti: predstavlja neku vrstu ID-a, ali
 # cemo to uraditi u drugoj iteraciji
+
+# Drvo odlucivanja 1: koristimo rpart, jer moze raditi u nekim slucajevima
+# i sa nedostajucim vrijednostima, sto je ustanovljeno pri analizi varijabli
 rpart.attrition <- rpart(Attrition~., data=atrain)
 rpart.pred <- predict(rpart.attrition, atest, type="class")
-
-# Konfuzijska matrica na 2 nacina: prvi koristeci confusionMatrix
-# drugi koristeci lab 
-
 confusionMatrix(rpart.pred, atest$Attrition) 
 plot(rpart.attrition)
 text(rpart.attrition,cex=.6, pos=1, offset=0.7)
