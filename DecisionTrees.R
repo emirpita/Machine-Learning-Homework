@@ -88,14 +88,24 @@ attrition.tree
 #Komentar: Sve se poboljsalo znatno
 
 #oversampling
-dec.data_over<-ovun.sample(Attrition~., data = atrain, 
-                       method="over", N=1960)$data
+dec.data_over<-ovun.sample(Attrition~., data = atrain, method="over", N=1960)$data
 #undersampling
-dec.data_under<-ovun.sample(Attrition~., data = atrain, 
-                        method="under", N=400, seed = 1)$data
-#new training and testing
-rpart.over.fit <- rpart(Attrition~., data=dec.data_over)
-rpart.over.pred <- predict(over.fit, newdata = atest, type="class")
+dec.data_under<-ovun.sample(Attrition~., data = atrain, method="under", N=400, seed = 1)$data
 
-rpart.under.fit <- rpart(cls ~., data=data_under)
-rpart.under.pred <- predict(under.fit, newdata = hacide.test, type="class")
+#Drvo 1 rpart
+rpart.over.fit <- rpart(Attrition~., data=dec.data_over)
+rpart.over.pred <- predict(rpart.over.fit, atest, type="class")
+confusionMatrix(rpart.over.pred, atest$Attrition)
+
+rpart.under.fit <- rpart(Attrition~., data=dec.data_under)
+rpart.under.pred <- predict(rpart.under.fit, atest, type="class")
+confusionMatrix(rpart.under.pred, atest$Attrition)
+
+# Drvo 2 tree
+tree.over.fit<-tree(Attrition~., data=dec.data_over)
+tree.over.pred<-predict(tree.over.fit, atest, type ="class") 
+confusionMatrix(tree.over.pred, atest$Attrition)
+
+tree.under.fit<-tree(Attrition~., data=dec.data_over)
+tree.under.pred<-predict(tree.over.fit, atest, type ="class") 
+confusionMatrix(tree.under.pred, atest$Attrition)
