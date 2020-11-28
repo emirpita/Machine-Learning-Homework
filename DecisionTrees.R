@@ -11,8 +11,8 @@ library(tree)
 library(ROSE)
 
 # Ucitavanje podataka (izvornih) u data frame
-atrain<-read.csv("data/attrition_train.csv", header=TRUE)
-atest<-read.csv("data/attrition_test.csv", header=TRUE)
+atrain<-read.csv("Data/attrition_train.csv", header=TRUE)
+atest<-read.csv("Data/attrition_test.csv", header=TRUE)
 
 # Postavljanje faktor varijabli
 atrain$Attrition <- as.factor(atrain$Attrition)
