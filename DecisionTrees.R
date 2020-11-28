@@ -88,7 +88,7 @@ attrition.tree
 #Komentar: Sve se poboljsalo znatno
 
 #oversampling
-dec.data_over<-ovun.sample(Attrition~., data = atrain, method="over", N=1960)$data
+dec.data_over<-ovun.sample(Attrition~., data = atrain, method="over", N=10000)$data
 #undersampling
 dec.data_under<-ovun.sample(Attrition~., data = atrain, method="under", N=400, seed = 1)$data
 
