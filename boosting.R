@@ -46,7 +46,7 @@ boost.pred<-ifelse(boost.pred>mean(boost.pred),1,0)
 confusionMatrix(as.factor(boost.pred),as.factor(atest$Attrition), positive = "1")
 
 
-#Druga iteracija
+#Druga iteracija#
 atrain$Attrition<-ifelse(atrain$Attrition=="Yes",1,0)
 atest$Attrition<-ifelse(atest$Attrition=="Yes",1,0)
 atrain$Attrition <- as.character(atrain$Attrition)
