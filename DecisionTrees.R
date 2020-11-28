@@ -8,7 +8,7 @@ library(statip)
 library(e1071)
 library(ISLR)
 library(tree)
-library(C50)
+library(ROSE)
 
 # Ucitavanje podataka (izvornih) u data frame
 atrain<-read.csv("data/attrition_train.csv", header=TRUE)
@@ -37,41 +37,16 @@ aggr(atrain)
 md.pattern(atest)
 aggr(atest) # Iz ovog je ocito da atest nema nedostajucih vrijednosti, sto je olaksanje
 
-# Drvo odlucivanja 1: koristimo rpart, jer moze raditi u nekim slucajevima
-# i sa nedostajucim vrijednostima, sto je ustanovljeno pri analizi varijabli
 
 # Prva iteracija: istreniramo drvo sa postojecim podacima (izvornim):
 # Ocito je da se varijabla X treba izbaciti: predstavlja neku vrstu ID-a, ali
 # cemo to uraditi u drugoj iteraciji
+
+# Drvo odlucivanja 1: koristimo rpart, jer moze raditi u nekim slucajevima
+# i sa nedostajucim vrijednostima, sto je ustanovljeno pri analizi varijabli
 rpart.attrition <- rpart(Attrition~., data=atrain)
 rpart.pred <- predict(rpart.attrition, atest, type="class")
-
-# Konfuzijska matrica na 2 nacina: prvi koristeci confusionMatrix
-# drugi koristeci lab 
-
-#confusionMatrix(rpart.attrition, atest$Attrition) 
-# Error: `data` and `reference` should be factors with the same levels.
-
-rpart.conf<-table(atest$Attrition,rpart.pred) 
-
-#Tacnost (TP+TN/all):
-rpart.acc<-(rpart.conf[1,1]+rpart.conf[2,2])/(sum(rpart.conf))
-#Stepen greske (FP+FN/all):
-rpart.err<-(rpart.conf[1,2]+rpart.conf[2,1])/(sum(rpart.conf))
-#Osjetljivost=Recall (sensitivity) - TPR (TP/Positive):
-rpart.sens<-rpart.conf[2,2]/(rpart.conf[2,1]+rpart.conf[2,2])
-#Specificnost (specificity) - TNR (TN/Negative):
-rpart.spec<-rpart.conf[1,1]/(rpart.conf[1,1]+rpart.conf[1,2])
-#Preciznost (TP/TP+FP):
-rpart.prec<-rpart.conf[2,2]/(rpart.conf[2,2]+rpart.conf[1,2])
-
-rpart.conf
-rpart.acc
-rpart.err
-rpart.sens
-rpart.spec
-rpart.prec
-
+confusionMatrix(rpart.pred, atest$Attrition) 
 plot(rpart.attrition)
 text(rpart.attrition,cex=.6, pos=1, offset=0.7)
 rpart.attrition
@@ -80,32 +55,7 @@ rpart.attrition
 # Drvo odlucivanja 2: koristimo paket tree
 attrition.tree<-tree(Attrition~., data=atrain)
 tree.pred<-predict(attrition.tree, atest, type ="class") 
-
-# Konfuzijska matrica na 2 nacina: prvi koristeci confusionMatrix
-# drugi koristeci lab 
-
-confusionMatrix(rpart.attrition, atest$Attrition)
-
-tree.conf<-table(atest$Attrition,tree.pred) 
-
-#Tacnost (TP+TN/all):
-tree.acc<-(tree.conf[1,1]+tree.conf[2,2])/(sum(tree.conf))
-#Stepen greske (FP+FN/all):
-tree.err<-(tree.conf[1,2]+tree.conf[2,1])/(sum(tree.conf))
-#Osjetljivost=Recall (sensitivity) - TPR (TP/Positive):
-tree.sens<-tree.conf[2,2]/(tree.conf[2,1]+tree.conf[2,2])
-#Specificnost (specificity) - TNR (TN/Negative):
-tree.spec<-tree.conf[1,1]/(tree.conf[1,1]+tree.conf[1,2])
-#Preciznost (TP/TP+FP):
-tree.prec<-tree.conf[2,2]/(tree.conf[2,2]+tree.conf[1,2])
-
-tree.conf
-tree.acc
-tree.err
-tree.sens
-tree.spec
-tree.prec
- 
+confusionMatrix(tree.pred, atest$Attrition)
 plot(attrition.tree)
 text(attrition.tree,cex=.6, pos=1, offset=0.7)
 attrition.tree
@@ -118,96 +68,34 @@ attrition.tree
 # U skripti ViewDataInfo su info o data framovima
 
 
-# Bez izbacivanja kolona
-
+# Iteracija 2
 # rpart drvo
 rpart.attrition <- rpart(Attrition~., data=atrain)
 rpart.pred <- predict(rpart.attrition, atest, type="class")
-confusionMatrix(rpart.attrition, atest$Attrition)
+confusionMatrix(rpart.pred, atest$Attrition)
 plot(rpart.attrition)
 text(rpart.attrition,cex=.6, pos=1, offset=0.7)
 rpart.attrition
-
-# Konfuzijska matrica
-rpart.conf<-table(atest$Attrition,rpart.pred) 
-
-#Tacnost (TP+TN/all):
-rpart.acc<-(rpart.conf[1,1]+rpart.conf[2,2])/(sum(rpart.conf))
-#Stepen greske (FP+FN/all):
-rpart.err<-(rpart.conf[1,2]+rpart.conf[2,1])/(sum(rpart.conf))
-#Osjetljivost=Recall (sensitivity) - TPR (TP/Positive):
-rpart.sens<-rpart.conf[2,2]/(rpart.conf[2,1]+rpart.conf[2,2])
-#Specificnost (specificity) - TNR (TN/Negative):
-rpart.spec<-rpart.conf[1,1]/(rpart.conf[1,1]+rpart.conf[1,2])
-#Preciznost (TP/TP+FP):
-rpart.prec<-rpart.conf[2,2]/(rpart.conf[2,2]+rpart.conf[1,2])
-
-rpart.conf
-rpart.acc
-rpart.err
-rpart.sens
-rpart.spec
-rpart.prec
 # Komentar: Sve poraslo, greska opala, 
 
 # tree drvo
-attrition.tree<-tree(as.factor(Attrition)~., data=atrain)
+attrition.tree<-tree(Attrition~., data=atrain)
 tree.pred<-predict(attrition.tree, atest, type ="class") 
-confusionMatrix(rpart.attrition, atest$Attrition)
+confusionMatrix(tree.pred, atest$Attrition)
 plot(attrition.tree)
 text(attrition.tree,cex=.6, pos=1, offset=0.7)
 attrition.tree
-
-# Konfuzijska matrica
-tree.conf<-table(atest$Attrition,tree.pred) 
-
-#Tacnost (TP+TN/all):
-tree.acc<-(tree.conf[1,1]+tree.conf[2,2])/(sum(tree.conf))
-#Stepen greske (FP+FN/all):
-tree.err<-(tree.conf[1,2]+tree.conf[2,1])/(sum(tree.conf))
-#Osjetljivost=Recall (sensitivity) - TPR (TP/Positive):
-tree.sens<-tree.conf[2,2]/(tree.conf[2,1]+tree.conf[2,2])
-#Specificnost (specificity) - TNR (TN/Negative):
-tree.spec<-tree.conf[1,1]/(tree.conf[1,1]+tree.conf[1,2])
-#Preciznost (TP/TP+FP):
-tree.prec<-tree.conf[2,2]/(tree.conf[2,2]+tree.conf[1,2])
-
-tree.conf
-tree.acc
-tree.err
-tree.sens
-tree.spec
-tree.prec 
-
 #Komentar: Sve se poboljsalo znatno
 
-# Izbacivanje kolona
-# rpart drvo
-rpart.attrition <- rpart(Attrition~.-Over18, data=atrain)
-rpart.pred <- predict(rpart.attrition, atest, type="class")
-confusionMatrix(rpart.attrition, atest$Attrition)
-plot(rpart.attrition)
-text(rpart.attrition,cex=.6, pos=1, offset=0.7)
-rpart.attrition
+#oversampling
+dec.data_over<-ovun.sample(Attrition~., data = atrain, 
+                       method="over", N=1960)$data
+#undersampling
+dec.data_under<-ovun.sample(Attrition~., data = atrain, 
+                        method="under", N=400, seed = 1)$data
+#new training and testing
+rpart.over.fit <- rpart(Attrition~., data=dec.data_over)
+rpart.over.pred <- predict(over.fit, newdata = atest, type="class")
 
-# Konfuzijska matrica
-rpart.conf<-table(atest$Attrition,rpart.pred) 
-
-#Tacnost (TP+TN/all):
-rpart.acc<-(rpart.conf[1,1]+rpart.conf[2,2])/(sum(rpart.conf))
-#Stepen greske (FP+FN/all):
-rpart.err<-(rpart.conf[1,2]+rpart.conf[2,1])/(sum(rpart.conf))
-#Osjetljivost=Recall (sensitivity) - TPR (TP/Positive):
-rpart.sens<-rpart.conf[2,2]/(rpart.conf[2,1]+rpart.conf[2,2])
-#Specificnost (specificity) - TNR (TN/Negative):
-rpart.spec<-rpart.conf[1,1]/(rpart.conf[1,1]+rpart.conf[1,2])
-#Preciznost (TP/TP+FP):
-rpart.prec<-rpart.conf[2,2]/(rpart.conf[2,2]+rpart.conf[1,2])
-
-rpart.conf
-rpart.acc
-rpart.err
-rpart.sens
-rpart.spec
-rpart.prec
-
+rpart.under.fit <- rpart(cls ~., data=data_under)
+rpart.under.pred <- predict(under.fit, newdata = hacide.test, type="class")
