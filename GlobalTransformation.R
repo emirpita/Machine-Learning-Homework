@@ -11,18 +11,19 @@ library(tree)
 
 # Ucitavanje podataka (izvornih) u data frame
 attrition_train<-read.csv("Data/attrition_train.csv", header=TRUE)
-#n <- nrow(attrition_train);
-#eighty_percent <- floor(n * 0.8)
-#train_sample <- sample(1:n, eighty_percent) 
-#test_sample <- setdiff(1:n, train_sample) 
+attrition_test<-read.csv("Data/attrition_test.csv", header=TRUE)
+attrition_test$Attrition <- as.factor(attrition_test$Attrition)
+#oversampling
+#attrition_train<-ovun.sample(Attrition~., data = attrition_train, method="over", N=10000)$data
+#undersampling
+attrition_train<-ovun.sample(Attrition~., data = attrition_train, method="under", N=400, seed = 1)$data
 
-#attrition_train <- attrition_train[train_sample, ] 
-#atest <- attrition_train[test_sample, ] 
+
 # Postavljanje faktor varijabli
 attrition_train$Attrition <- as.factor(attrition_train$Attrition)
 #prebacivanje BirthDate varijable u Date tip i agregiranje na godinu rodjenja
 attrition_train$BirthDate <- as.Date(attrition_train$BirthDate)
-attrition_train$BirthDate <- format(attrition_train$BirthDate, "%Y")
+#attrition_train$BirthDate <- format(attrition_train$BirthDate, "%Y")
 
 
 # Kratka analiza podataka
@@ -67,16 +68,16 @@ attrition_train[is.na(attrition_train$StandardHours),'StandardHours']<-getmode(a
 attrition_train[is.na(attrition_train$TrainingTimesLastYear),'TrainingTimesLastYear']<-getmode(attrition_train[!is.na(attrition_train$TrainingTimesLastYear),'TrainingTimesLastYear'])
 
 consolidate.education <- function(education) {
-  if(education == 1) {
-    return('Below College')
-  } else if(education == 2) {
-    return('College')
-  } else if(education == 3) {
-    return('Bachelor')
-  } else if(education == 4) {
-    return('Master')
-  } else if(education == 5) {
-    return('Doctor')
+  if(education == 'Below College') {
+    return(1)
+  } else if(education == 'College') {
+    return(2)
+  } else if(education == 'Bachelor') {
+    return(3)
+  } else if(education == 'Master') {
+    return(4)
+  } else if(education == 'Doctor') {
+    return(5)
   } else {
     return(education)
   }
@@ -97,82 +98,82 @@ consolidate.jobLevel <- function(jobLevel) {
   }
 }
 consolidate.enviromentSatisfaction <- function(eSatisfaction) {
-  if(eSatisfaction == 1) {
-    return('Low')
-  } else if(eSatisfaction == 2) {
-    return('Medium')
-  } else if(eSatisfaction == 3) {
-    return('High')
-  } else if(eSatisfaction == 4) {
-    return('Very High')
+  if(eSatisfaction == 'Low') {
+    return(1)
+  } else if(eSatisfaction == 'Medium') {
+    return(2)
+  } else if(eSatisfaction == 'High') {
+    return(3)
+  } else if(eSatisfaction == 'Very High') {
+    return(4)
   }else {
     return(eSatisfaction)
   }
 }
 consolidate.jobInvolvment <- function(jobInvolvment) {
-  if(jobInvolvment == 1) {
-    return('Low')
-  } else if(jobInvolvment == 2) {
-    return('Medium')
-  } else if(jobInvolvment == 3) {
-    return('High')
-  } else if(jobInvolvment == 4) {
-    return('Very High')
+  if(jobInvolvment == 'Low') {
+    return(1)
+  } else if(jobInvolvment == 'Medium') {
+    return(2)
+  } else if(jobInvolvment == 'High') {
+    return(3)
+  } else if(jobInvolvment == 'Very High') {
+    return(4)
   } else {
     return(jobInvolvment)
   }
 }
 consolidate.workLifeBalance <- function(workLifeBalance) {
-  if(workLifeBalance == 1) {
-    return('Bad')
-  } else if(workLifeBalance == 2) {
-    return('Good')
-  } else if(workLifeBalance == 3) {
-    return('Better')
-  } else if(workLifeBalance == 4) {
-    return('Best')
+  if(workLifeBalance == 'Bad') {
+    return(1)
+  } else if(workLifeBalance == 'Good') {
+    return(2)
+  } else if(workLifeBalance == 'Better') {
+    return(3)
+  } else if(workLifeBalance == 'Best') {
+    return(4)
   } else {
     return(workLifeBalance)
   }
 }
 
 consolidate.relationshipSatisfaction <- function(relationshipSatisfaction) {
-  if(relationshipSatisfaction == 1) {
-    return('Low')
-  } else if(relationshipSatisfaction == 2) {
-    return('Medium')
-  } else if(relationshipSatisfaction == 3) {
-    return('High')
-  } else if(relationshipSatisfaction == 4) {
-    return('Very High')
+  if(relationshipSatisfaction == 'Low') {
+    return(1)
+  } else if(relationshipSatisfaction == 'Medium') {
+    return(2)
+  } else if(relationshipSatisfaction == 'High') {
+    return(3)
+  } else if(relationshipSatisfaction == 'Very High') {
+    return(4)
   } else {
     return(relationshipSatisfaction)
   }
 }
 
 consolidate.performanceRating <- function(performanceRating) {
-  if(performanceRating == 1) {
-    return('Low')
-  } else if(performanceRating == 2) {
-    return('Good')
-  } else if(performanceRating == 3) {
-    return('Excellent')
-  } else if(performanceRating == 4) {
-    return('Outstanding')
+  if(performanceRating == 'Low') {
+    return(1)
+  } else if(performanceRating == 'Good') {
+    return(2)
+  } else if(performanceRating == 'Excellent') {
+    return(3)
+  } else if(performanceRating == 'Outstanding') {
+    return(4)
   } else {
     return(performanceRating)
   }
 }
 
 consolidate.jobSatisfaction <- function(jobSatisfaction) {
-  if(jobSatisfaction == 1) {
-    return('Low')
-  } else if(jobSatisfaction == 2) {
-    return('Medium')
-  } else if(jobSatisfaction == 3) {
-    return('High')
-  } else if(jobSatisfaction == 4) {
-    return('Very High')
+  if(jobSatisfaction == 'Low') {
+    return(1)
+  } else if(jobSatisfaction == 'Medium') {
+    return(2)
+  } else if(jobSatisfaction == 'High') {
+    return(3)
+  } else if(jobSatisfaction == 'Very High') {
+    return(4)
   } else {
     return(jobSatisfaction)
   }
@@ -187,15 +188,27 @@ consolidate.stockoptionlevel <- function(solevel) {
   }
 }
 #normalizacija trening seta
-attrition_train$Education <- as.factor(sapply(as.character(attrition_train$Education), consolidate.education, USE.NAMES=FALSE))
-attrition_train$EnvironmentSatisfaction <- as.factor(sapply(as.character(attrition_train$EnvironmentSatisfaction), consolidate.enviromentSatisfaction, USE.NAMES=FALSE))
-attrition_train$JobInvolvement <- as.factor(sapply(as.character(attrition_train$JobInvolvement), consolidate.jobInvolvment, USE.NAMES=FALSE))
-attrition_train$JobSatisfaction <- as.factor(sapply(as.character(attrition_train$JobSatisfaction), consolidate.jobSatisfaction, USE.NAMES=FALSE))
-attrition_train$PerformanceRating <- as.factor(sapply(as.character(attrition_train$PerformanceRating), consolidate.performanceRating, USE.NAMES=FALSE))
-attrition_train$RelationshipSatisfaction <- as.factor(sapply(as.character(attrition_train$RelationshipSatisfaction), consolidate.relationshipSatisfaction, USE.NAMES=FALSE))
-attrition_train$WorkLifeBalance <- as.factor(sapply(as.character(attrition_train$WorkLifeBalance), consolidate.workLifeBalance, USE.NAMES=FALSE))
-attrition_train$JobLevel <- as.factor(sapply(as.character(attrition_train$JobLevel), consolidate.jobLevel, USE.NAMES=FALSE))
-attrition_train$StockOptionLevel <- as.factor(sapply(as.character(attrition_train$StockOptionLevel), consolidate.stockoptionlevel, USE.NAMES=FALSE))
+attrition_train$Education <- as.numeric(sapply(as.character(attrition_train$Education), consolidate.education, USE.NAMES=FALSE))
+attrition_train$EnvironmentSatisfaction <- as.numeric(sapply(as.character(attrition_train$EnvironmentSatisfaction), consolidate.enviromentSatisfaction, USE.NAMES=FALSE))
+attrition_train$JobInvolvement <- as.numeric(sapply(as.character(attrition_train$JobInvolvement), consolidate.jobInvolvment, USE.NAMES=FALSE))
+attrition_train$JobSatisfaction <- as.numeric(sapply(as.character(attrition_train$JobSatisfaction), consolidate.jobSatisfaction, USE.NAMES=FALSE))
+attrition_train$PerformanceRating <- as.numeric(sapply(as.character(attrition_train$PerformanceRating), consolidate.performanceRating, USE.NAMES=FALSE))
+attrition_train$RelationshipSatisfaction <- as.numeric(sapply(as.character(attrition_train$RelationshipSatisfaction), consolidate.relationshipSatisfaction, USE.NAMES=FALSE))
+attrition_train$WorkLifeBalance <- as.numeric(sapply(as.character(attrition_train$WorkLifeBalance), consolidate.workLifeBalance, USE.NAMES=FALSE))
+attrition_train$JobLevel <- as.numeric(sapply(as.character(attrition_train$JobLevel), consolidate.jobLevel, USE.NAMES=FALSE))
+attrition_train$StockOptionLevel <- as.numeric(sapply(as.character(attrition_train$StockOptionLevel), consolidate.stockoptionlevel, USE.NAMES=FALSE))
+
+attrition_test$Education <- as.numeric(sapply(as.character(attrition_test$Education), consolidate.education, USE.NAMES=FALSE))
+attrition_test$EnvironmentSatisfaction <- as.numeric(sapply(as.character(attrition_test$EnvironmentSatisfaction), consolidate.enviromentSatisfaction, USE.NAMES=FALSE))
+attrition_test$JobInvolvement <- as.numeric(sapply(as.character(attrition_test$JobInvolvement), consolidate.jobInvolvment, USE.NAMES=FALSE))
+attrition_test$JobSatisfaction <- as.numeric(sapply(as.character(attrition_test$JobSatisfaction), consolidate.jobSatisfaction, USE.NAMES=FALSE))
+attrition_test$PerformanceRating <- as.numeric(sapply(as.character(attrition_test$PerformanceRating), consolidate.performanceRating, USE.NAMES=FALSE))
+attrition_test$RelationshipSatisfaction <- as.numeric(sapply(as.character(attrition_test$RelationshipSatisfaction), consolidate.relationshipSatisfaction, USE.NAMES=FALSE))
+attrition_test$WorkLifeBalance <- as.numeric(sapply(as.character(attrition_test$WorkLifeBalance), consolidate.workLifeBalance, USE.NAMES=FALSE))
+attrition_test$JobLevel <- as.numeric(sapply(as.character(attrition_test$JobLevel), consolidate.jobLevel, USE.NAMES=FALSE))
+attrition_test$StockOptionLevel <- as.numeric(sapply(as.character(attrition_test$StockOptionLevel), consolidate.stockoptionlevel, USE.NAMES=FALSE))
+
+
 
 
 #funkcije za transformaciju i skaliranje varijabli
@@ -221,3 +234,4 @@ attrition_train[,c(4,10,20)]<-lapply(attrition_train[,c(4,10,20)],z_score)
 #primjena log funkcije na varijable koje su smaknute
 attrition_train$HourlyRate<-log(attrition_train$HourlyRate)
 attrition_train$MonthlyIncome<-log(attrition_train$MonthlyIncome)
+
