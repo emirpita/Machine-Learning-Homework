@@ -16,7 +16,7 @@ attrition_test$Attrition <- as.factor(attrition_test$Attrition)
 #oversampling
 #attrition_train<-ovun.sample(Attrition~., data = attrition_train, method="over", N=10000)$data
 #undersampling
-attrition_train<-ovun.sample(Attrition~., data = attrition_train, method="under", N=400, seed = 1)$data
+#attrition_train<-ovun.sample(Attrition~., data = attrition_train, method="under", N=400, seed = 1)$data
 
 
 # Postavljanje faktor varijabli

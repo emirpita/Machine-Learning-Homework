@@ -2,6 +2,7 @@ library(dplyr)
 library(randomForest)
 library(gbm)
 library(ROSE)
+
 #holdout za rpart
 for(i in 1:10){
   set.seed(2^i)
@@ -115,3 +116,24 @@ pred <- predict(model, attrition_test)
 print(model)
 confusionMatrix(pred, attrition_test$Attrition)
 confusionMatrix(model, "none")
+
+
+
+
+
+
+#####JASMIN
+fold <- nrow(attrition_train)/8
+cv_table <- matrix(c(0,0,0,0),nrow=2,ncol=2)
+accuracy = 0
+kappa = 0
+for (x in 1:8) {
+  set.seed(17810)
+  cv_train <- attrition_train[-c(((x-1)*fold):(fold*x)),]
+  cv_test <- attrition_train[c(((x-1)*fold):(fold*x)),]
+  model_rf_cv <- rpart(Attrition~.,cv_train)
+  pred_rf_cv <- predict(model_rf_cv, cv_test, type ="class")
+  cv_table <- cv_table + table(pred_rf_cv, cv_test$Attrition)
+}
+cv_table <- as.table(cv_table)
+confusionMatrix(cv_table)
