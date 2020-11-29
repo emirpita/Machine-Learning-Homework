@@ -10,8 +10,14 @@ library(ISLR)
 library(tree)
 
 # Ucitavanje podataka (izvornih) u data frame
-atrain<-read.csv("Data/attrition_train.csv", header=TRUE)
-atest<-read.csv("Data/attrition_test.csv", header=TRUE)
+attrition_train<-read.csv("Data/attrition_train.csv", header=TRUE)
+n <- nrow(attrition_train);
+eighty_percent <- floor(n * 0.8)
+train_sample <- sample(1:n, eighty_percent) 
+test_sample <- setdiff(1:n, train_sample) 
+
+atrain <- attrition_train[train_sample, ] 
+atest <- attrition_train[test_sample, ] 
 
 # Postavljanje faktor varijabli
 atrain$Attrition <- as.factor(atrain$Attrition)

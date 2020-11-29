@@ -11,9 +11,14 @@ library(ROSE)
 getwd()
 setwd("E:/MU/Zadaca1/")
 
-atrain<-read.csv("Data/attrition_train.csv", header=TRUE)
-atrain<-read.csv("Data/attrition_train.csv", header=TRUE)
+attrition_train<-read.csv("Data/attrition_train.csv", header=TRUE)
+n <- nrow(attrition_train);
+eighty_percent <- floor(n * 0.8)
+train_sample <- sample(1:n, eighty_percent) 
+test_sample <- setdiff(1:n, train_sample) 
 
+atrain <- attrition_train[train_sample, ] 
+atest <- attrition_train[test_sample, ] 
 #potrebno popuniti nedostajuce vrijednosti
 
 #prva itercija
