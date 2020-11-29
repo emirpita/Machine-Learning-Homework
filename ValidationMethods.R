@@ -117,23 +117,127 @@ print(model)
 confusionMatrix(pred, attrition_test$Attrition)
 confusionMatrix(model, "none")
 
-
-
-
-
-
-#####JASMIN
-fold <- nrow(attrition_train)/8
+#--------------------------------------------
+#rpart
 cv_table <- matrix(c(0,0,0,0),nrow=2,ncol=2)
-accuracy = 0
-kappa = 0
-for (x in 1:8) {
-  set.seed(17810)
-  cv_train <- attrition_train[-c(((x-1)*fold):(fold*x)),]
-  cv_test <- attrition_train[c(((x-1)*fold):(fold*x)),]
-  model_rf_cv <- rpart(Attrition~.,cv_train)
-  pred_rf_cv <- predict(model_rf_cv, cv_test, type ="class")
-  cv_table <- cv_table + table(pred_rf_cv, cv_test$Attrition)
+n <- nrow(attrition_train);
+eighty_percent <- floor(n * 0.8)
+train_sample <- sample(1:n, eighty_percent) 
+test_sample <- setdiff(1:n, train_sample) 
+
+atrain <- attrition_train[train_sample, ] 
+atest <- attrition_train[test_sample, ] 
+atrain<-atrain[sample(nrow(atrain)),]
+#Create 10 equally size folds
+folds <- cut(seq(1,nrow(atrain)),breaks=10,labels=FALSE)
+
+for(i in 1:10){
+  testIndexes <- which(folds==i,arr.ind=TRUE)
+  testData <- atrain[testIndexes, ]
+  trainData <- atrain[-testIndexes, ]
+  model <- rpart(Attrition~.,trainData)
+  prediction <- predict(model, testData, type ="class")
+  cv_table <- cv_table + table(prediction, testData$Attrition)
+  
+}
+cv_table <- as.table(cv_table)
+confusionMatrix(cv_table)
+
+
+
+#random forest
+cv_table <- matrix(c(0,0,0,0),nrow=2,ncol=2)
+n <- nrow(attrition_train);
+eighty_percent <- floor(n * 0.8)
+train_sample <- sample(1:n, eighty_percent) 
+test_sample <- setdiff(1:n, train_sample) 
+
+atrain <- attrition_train[train_sample, ] 
+atest <- attrition_train[test_sample, ] 
+atrain<-atrain[sample(nrow(atrain)),]
+atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)]<-lapply(atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)],as.factor)
+
+folds <- cut(seq(1,nrow(atrain)),breaks=10,labels=FALSE)
+for(i in 1:10){
+
+  testIndexes <- which(folds==i,arr.ind=TRUE)
+  testData <- atrain[testIndexes, ]
+  trainData <- atrain[-testIndexes, ]
+  model <- randomForest(Attrition~.-X-EmployeeCount, data=atrain, mtry=3, importance =TRUE, ntree=3000, na.action = na.omit)
+  prediction <- predict(model, testData, type ="class")
+  cv_table <- cv_table + table(prediction, testData$Attrition)
+  
+}
+cv_table <- as.table(cv_table)
+confusionMatrix(cv_table)
+
+
+
+
+#bagging
+cv_table <- matrix(c(0,0,0,0),nrow=2,ncol=2)
+n <- nrow(attrition_train);
+eighty_percent <- floor(n * 0.8)
+train_sample <- sample(1:n, eighty_percent) 
+test_sample <- setdiff(1:n, train_sample) 
+
+atrain <- attrition_train[train_sample, ] 
+atest <- attrition_train[test_sample, ] 
+atrain<-atrain[sample(nrow(atrain)),]
+atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)]<-lapply(atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)],as.factor)
+
+#Create 10 equally size folds
+folds <- cut(seq(1,nrow(atrain)),breaks=10,labels=FALSE)
+#Perform 10 fold cross validation
+for(i in 1:10){
+  testIndexes <- which(folds==i,arr.ind=TRUE)
+  testData <- atrain[testIndexes, ]
+  trainData <- atrain[-testIndexes, ]
+  model <- bagging(
+    formula = Attrition ~ .,
+    data = atrain,
+    nbagg = 100,  
+    coob = TRUE,
+    control = rpart.control(minsplit = 2, cp = 0)
+  )
+  prediction <- predict(model, testData, type ="class")
+  cv_table <- cv_table + table(prediction, testData$Attrition)
+  
+}
+cv_table <- as.table(cv_table)
+confusionMatrix(cv_table)
+
+
+
+#boosting
+cv_table <- matrix(c(0,0,0,0),nrow=2,ncol=2)
+n <- nrow(attrition_train);
+eighty_percent <- floor(n * 0.8)
+train_sample <- sample(1:n, eighty_percent) 
+test_sample <- setdiff(1:n, train_sample) 
+
+atrain <- attrition_train[train_sample, ] 
+atest <- attrition_train[test_sample, ] 
+atrain<-atrain[sample(nrow(atrain)),]
+
+atrain$Attrition<-ifelse(atrain$Attrition=="Yes",1,0)
+atest$Attrition<-ifelse(atest$Attrition=="Yes",1,0)
+atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)]<-lapply(atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)],as.factor)
+atrain$Attrition <- as.character(atrain$Attrition)
+
+
+folds <- cut(seq(1,nrow(atrain)),breaks=10,labels=FALSE)
+
+for(i in 1:10){
+
+  testIndexes <- which(folds==i,arr.ind=TRUE)
+  testData <- atrain[testIndexes, ]
+  trainData <- atrain[-testIndexes, ]
+  model<-gbm(Attrition~.-EmployeeCount-Over18-StandardHours, data=na.omit(trainData), distribution="bernoulli", n.trees=10000, interaction.depth=8)
+  prediction<-predict.gbm(model, testData, type = "response", n.trees=10000)
+  prediction<-ifelse(prediction>mean(prediction),1,0)
+  cv_table <- cv_table + table(prediction, testData$Attrition)
+  
 }
 cv_table <- as.table(cv_table)
 confusionMatrix(cv_table)

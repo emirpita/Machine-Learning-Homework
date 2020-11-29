@@ -1,5 +1,3 @@
-#ucitamo optimalni random forest
-
 library(ISLR)
 library(tree)
 library(OneR)
@@ -15,6 +13,7 @@ library(mice)
 library(VIM)
 library(ggplot2)
 library(statip)
+library(rpart.plot)
 
 
 #Ripper
@@ -26,5 +25,28 @@ t<-table(JRip.pred, atest$Attrition)
 summary(jRip.attrition)
 #display rules:
 jRip.attrition
+
+
+#pravila za rpart
+n <- nrow(attrition_train);
+eighty_percent <- floor(n * 0.8)
+train_sample <- sample(1:n, eighty_percent) 
+test_sample <- setdiff(1:n, train_sample) 
+
+atrain <- attrition_train[train_sample, ] 
+atest <- attrition_train[test_sample, ] 
+
+atrain$Attrition <- as.factor(atrain$Attrition)
+atest$Attrition <- as.factor(atest$Attrition)
+rpart.attrition <- rpart(Attrition~., data=atrain)
+rpart.pred <- predict(rpart.attrition, atest, type="class")
+confusionMatrix(rpart.pred, atest$Attrition)
+plot(rpart.attrition)
+text(rpart.attrition,cex=.6, pos=1, offset=0.7)
+rpart.attrition
+rpart.rules(rpart.attrition)
+
+
+
 
 

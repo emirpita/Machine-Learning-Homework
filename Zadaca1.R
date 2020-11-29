@@ -123,14 +123,6 @@ apply(attrition_train[,c('X', 'DailyRate', 'DistanceFromHome', 'EmployeeCount', 
 
 
 #Veza izmedu varijabli
-#https://dzchilds.github.io/eda-for-bio/exploring-relationships-between-two-variables.html
-
-
-#Pearson?s correlation coefficient takes a value of 0 if two variables are uncorrelated, and a value of +1 or -1 if they are perfectly related. 
-#?Perfectly related? means we can predict the exact value of one variable given knowledge of the other. A positive value indicates that high values 
-#in one variable is associated with high values of the second. A negative value indicates that high values of one variable is associated with low 
-#values of the second
-
 #Attrition
 attrition_train$Attrition<-ifelse(attrition_train$Attrition=="Yes",1,0)
 
