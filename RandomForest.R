@@ -19,11 +19,12 @@ test_sample <- setdiff(1:n, train_sample)
 
 atrain <- attrition_train[train_sample, ] 
 atest <- attrition_train[test_sample, ] 
-#potrebno popuniti nedostajuce vrijednosti
+
+atrain$Attrition <- as.factor(atrain$Attrition)
+atest$Attrition <- as.factor(atest$Attrition)
 
 #prva itercija
-atrain$Attrition <- as.factor(atrain$Attrition)
-atrain_forest <- randomForest(Attrition~.-X-EmployeeCount, data=atrain, mtry=3, importance =TRUE, ntree=3000)
+atrain_forest <- randomForest(Attrition~., data=atrain, mtry=3, importance =TRUE, ntree=3000, na.action = na.omit)
 atrain_forest
 
 rforest.pred<-predict(atrain_forest,atest,type="class")

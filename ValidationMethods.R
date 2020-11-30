@@ -118,6 +118,8 @@ confusionMatrix(pred, attrition_test$Attrition)
 confusionMatrix(model, "none")
 
 #--------------------------------------------
+
+attrition_train<-read.csv("Data/attrition_train.csv", header=TRUE)
 #rpart
 cv_table <- matrix(c(0,0,0,0),nrow=2,ncol=2)
 n <- nrow(attrition_train);
@@ -128,7 +130,7 @@ test_sample <- setdiff(1:n, train_sample)
 atrain <- attrition_train[train_sample, ] 
 atest <- attrition_train[test_sample, ] 
 atrain<-atrain[sample(nrow(atrain)),]
-#Create 10 equally size folds
+
 folds <- cut(seq(1,nrow(atrain)),breaks=10,labels=FALSE)
 
 for(i in 1:10){
@@ -186,9 +188,8 @@ atest <- attrition_train[test_sample, ]
 atrain<-atrain[sample(nrow(atrain)),]
 atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)]<-lapply(atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)],as.factor)
 
-#Create 10 equally size folds
 folds <- cut(seq(1,nrow(atrain)),breaks=10,labels=FALSE)
-#Perform 10 fold cross validation
+
 for(i in 1:10){
   testIndexes <- which(folds==i,arr.ind=TRUE)
   testData <- atrain[testIndexes, ]

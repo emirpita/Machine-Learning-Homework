@@ -10,69 +10,69 @@ library(ISLR)
 library(tree)
 
 # Kratka analiza podataka
-names(atrain)
-dim(atrain)
-summary(atrain)
+names(attrition_train)
+dim(attrition_train)
+summary(attrition_train)
 
 names(atest)
 dim(atest)
 summary(atest)
 
-str(atrain)
+str(attrition_train)
 str(atest)
 
 # Provjera nedostajucih vrijednosti
-md.pattern(atrain)
-aggr(atrain)
+md.pattern(attrition_train)
+aggr(attrition_train)
 
 md.pattern(atest)
 aggr(atest) # Iz ovog je ocito da atest nema nedostajucih vrijednosti, sto je olaksanje
 
 #provjera koje varijable imaju prazne redove
-colnames(atrain)[colSums(is.na(atrain)) > 0]
+colnames(attrition_train)[colSums(is.na(attrition_train)) > 0]
 
-skewness(atrain$HourlyRate, na.rm = TRUE)
-skewness(atrain$MonthlyIncome, na.rm = TRUE)
-skewness(atrain$NumCompaniesWorked, na.rm = TRUE)
-skewness(atrain$TotalWorkingYears, na.rm = TRUE)
-skewness(atrain$YearsAtCompany, na.rm = TRUE)
-skewness(atrain$YearsSinceLastPromotion, na.rm = TRUE)
+skewness(attrition_train$HourlyRate, na.rm = TRUE)
+skewness(attrition_train$MonthlyIncome, na.rm = TRUE)
+skewness(attrition_train$NumCompaniesWorked, na.rm = TRUE)
+skewness(attrition_train$TotalWorkingYears, na.rm = TRUE)
+skewness(attrition_train$YearsAtCompany, na.rm = TRUE)
+skewness(attrition_train$YearsSinceLastPromotion, na.rm = TRUE)
 
 #distribucije varijabli
-prop.table(table(atrain$X)) #102
-prop.table(table(atrain$Attrition)) #character
-prop.table(table(atrain$BusinessTravel))
-prop.table(table(atrain$DailyRate))#vrlika distribucija
-prop.table(table(atrain$DistanceFromHome))
-prop.table(table(atrain$Education))
-prop.table(table(atrain$EducationField))
-prop.table(table(atrain$EmployeeCount))
-prop.table(table(atrain$EmployeeNumber))#102
-prop.table(table(atrain$EnvironmentSatisfaction))
-prop.table(table(atrain$Gender))
-prop.table(table(atrain$HourlyRate))#onako
-prop.table(table(atrain$JobInvolvement))
-prop.table(table(atrain$JobLevel))
-prop.table(table(atrain$JobRole))
-prop.table(table(atrain$JobSatisfaction))
-prop.table(table(atrain$MaritalStatus))
-prop.table(table(atrain$MonthlyIncome))#oggromna
-prop.table(table(atrain$MonthlyRate))#ogromna
-prop.table(table(atrain$NumCompaniesWorked))
-prop.table(table(atrain$Over18))
-prop.table(table(atrain$OverTime))
-prop.table(table(atrain$PercentSalaryHike))
-prop.table(table(atrain$PerformanceRating))
-prop.table(table(atrain$StandardHours))
-prop.table(table(atrain$StockOptionLevel))
-prop.table(table(atrain$TotalWorkingYears))
-prop.table(table(atrain$TrainingTimesLastYear))
-prop.table(table(atrain$WorkLifeBalance))
-prop.table(table(atrain$YearsAtCompany))
-prop.table(table(atrain$YearsInCurrentRole))
-prop.table(table(atrain$YearsSinceLastPromotion))
-prop.table(table(atrain$YearsWithCurrManager))
-prop.table(table(atrain$BirthDate))#onako
+prop.table(table(attrition_train$X)) #102
+prop.table(table(attrition_train$Attrition)) #character
+prop.table(table(attrition_train$BusinessTravel))
+prop.table(table(attrition_train$DailyRate))#vrlika distribucija
+prop.table(table(attrition_train$DistanceFromHome))
+prop.table(table(attrition_train$Education))
+prop.table(table(attrition_train$EducationField))
+prop.table(table(attrition_train$EmployeeCount))
+prop.table(table(attrition_train$EmployeeNumber))#102
+prop.table(table(attrition_train$EnvironmentSatisfaction))
+prop.table(table(attrition_train$Gender))
+prop.table(table(attrition_train$HourlyRate))#onako
+prop.table(table(attrition_train$JobInvolvement))
+prop.table(table(attrition_train$JobLevel))
+prop.table(table(attrition_train$JobRole))
+prop.table(table(attrition_train$JobSatisfaction))
+prop.table(table(attrition_train$MaritalStatus))
+prop.table(table(attrition_train$MonthlyIncome))#oggromna
+prop.table(table(attrition_train$MonthlyRate))#ogromna
+prop.table(table(attrition_train$NumCompaniesWorked))
+prop.table(table(attrition_train$Over18))
+prop.table(table(attrition_train$OverTime))
+prop.table(table(attrition_train$PercentSalaryHike))
+prop.table(table(attrition_train$PerformanceRating))
+prop.table(table(attrition_train$StandardHours))
+prop.table(table(attrition_train$StockOptionLevel))
+prop.table(table(attrition_train$TotalWorkingYears))
+prop.table(table(attrition_train$TrainingTimesLastYear))
+prop.table(table(attrition_train$WorkLifeBalance))
+prop.table(table(attrition_train$YearsAtCompany))
+prop.table(table(attrition_train$YearsInCurrentRole))
+prop.table(table(attrition_train$YearsSinceLastPromotion))
+prop.table(table(attrition_train$YearsWithCurrManager))
+prop.table(table(attrition_train$BirthDate))#onako
 
 #transformisat cemo varijable koje imaju veliku distribuciju
 #to su varijable:  DailyRate, EmployeeNumber, HourlyRate, MonthlyIncome, MonthlyRate

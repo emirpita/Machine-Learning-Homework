@@ -1,6 +1,7 @@
 library(ggplot2)
 library(statip)
 library(Hmisc)
+library(corrplot)
 
 
 attrition_train<-read.csv("Data/attrition_train.csv", header=TRUE)

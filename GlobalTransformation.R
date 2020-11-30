@@ -32,7 +32,6 @@ dim(attrition_train)
 summary(attrition_train)
 
 
-
 str(attrition_train)
 
 
