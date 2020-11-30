@@ -14,6 +14,9 @@ library(VIM)
 library(ggplot2)
 library(statip)
 library(rpart.plot)
+library(tidyrules)
+library(dplyr)
+library(rpart)
 
 
 #Ripper
@@ -36,7 +39,8 @@ confusionMatrix(rpart.pred, attrition_test$Attrition)
 plot(rpart.attrition)
 text(rpart.attrition,cex=.6, pos=1, offset=0.7)
 rpart.attrition
-rpart.rules(rpart.attrition)
-
+#rpart.rules(rpart.attrition)
+rules_bc <- tidyRules(rpart.attrition)
+rules_bc
 
 

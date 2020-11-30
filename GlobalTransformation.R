@@ -23,6 +23,8 @@ attrition_test$Attrition <- as.factor(attrition_test$Attrition)
 attrition_train$Attrition <- as.factor(attrition_train$Attrition)
 #prebacivanje BirthDate varijable u Date tip i agregiranje na godinu rodjenja
 attrition_train$BirthDate <- as.Date(attrition_train$BirthDate)
+attrition_test$BirthDate <- as.Date(attrition_test$BirthDate)
+
 #attrition_train$BirthDate <- format(attrition_train$BirthDate, "%Y")
 
 
@@ -234,3 +236,7 @@ attrition_train[,c(4,10,20)]<-lapply(attrition_train[,c(4,10,20)],z_score)
 attrition_train$HourlyRate<-log(attrition_train$HourlyRate)
 attrition_train$MonthlyIncome<-log(attrition_train$MonthlyIncome)
 
+attrition_test[,c(4,10,20)]<-lapply(attrition_test[,c(4,10,20)],z_score)
+#primjena log funkcije na varijable koje su smaknute
+attrition_test$HourlyRate<-log(attrition_test$HourlyRate)
+attrition_test$MonthlyIncome<-log(attrition_test$MonthlyIncome)

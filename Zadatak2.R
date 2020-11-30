@@ -6,3 +6,4 @@ under.fit <- randomForest(Attrition~.-X-Over18, data=data_under, mtry=3, importa
 under.pred <- predict(under.fit, newdata = attrition_test, type="class")
 confusionMatrix(under.pred,attrition_test$Attrition)
 
+

@@ -90,6 +90,6 @@ atrain[,c(2:3,5,7:8,11:12,14:18,22:23,25:26,28,31,36)]<-lapply(atrain[,c(2:3,5,7
 atrain$Attrition <- as.character(atrain$Attrition)
 under.fit <- gbm(Attrition~.-EmployeeCount-Over18-StandardHours, data=atrain, distribution="bernoulli", n.trees=10000, interaction.depth=8)
 under.pred <- predict.gbm(under.fit, atest, type = "response", n.trees=10000)
-under.pred<-ifelse(over.pred>mean(over.pred),1,0)
+under.pred<-ifelse(under.pred>mean(under.pred),1,0)
 confusionMatrix(as.factor(under.pred),as.factor(atest$Attrition), positive = "1")
 
